@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deskmate Calculator</title>
+<style>
+  :root{
+    --body-a:  #2b2b2c;
+    --body-b:  #1e1e1f;
+    --panel:   #141414;
+    --lcd-bg:  #b9c48f;
+    --lcd-fg:  #1b2210;
+    --key-num: #3a3a3c;
+    --key-op:  #c9782f;
+    --key-fn:  #56555a;
+    --key-eq:  #4f7d5a;
+    --key-text:#f2f0ea;
+    --radius:  10px;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at 30% 20%, #38393c, #17181a 70%);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    padding:32px 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition-duration:0.01ms !important; }
+  }
+
+  :focus-visible{
+    outline:2px solid var(--lcd-bg);
+    outline-offset:2px;
+  }
+
+  .unit{
+    width:340px;
+    background:linear-gradient(160deg, var(--body-a), var(--body-b));
+    border-radius:22px;
+    padding:22px;
+    box-shadow:
+      0 40px 70px -30px rgba(0,0,0,0.7),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .brand-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:2px 6px 14px;
+    color:#8f8f92;
+    font-size:0.72rem;
+    letter-spacing:0.02em;
+  }
+  .brand-row .model{ color:#c9782f; font-weight:700; }
+
+  .screen-panel{
+    background:var(--panel);
+    border-radius:8px;
+    padding:14px 16px;
+    box-shadow:inset 0 4px 10px rgba(0,0,0,0.6);
+    margin-bottom:20px;
+  }
+
+  .lcd{
+    background:var(--lcd-bg);
+    border-radius:4px;
+    padding:18px 16px 14px;
+    box-shadow:inset 0 2px 4px rgba(0,0,0,0.25);
+    overflow:hidden;
+  }
+
+  .lcd-expression{
+    min-height:18px;
+    color:var(--lcd-fg);
+    opacity:0.65;
+    font-family:'Courier New', monospace;
+    font-size:0.85rem;
+    text-align:right;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .lcd-result{
+    color:var(--lcd-fg);
+    font-family:'Courier New', monospace;
+    font-weight:700;
+    font-size:2.1rem;
+    text-align:right;
+    line-height:1.2;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    letter-spacing:0.01em;
+  }
+
+  .keys{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:10px;
+  }
+
+  button{
+    border:none;
+    border-radius:8px;
+    padding:16px 0;
+    font-size:1.05rem;
+    font-weight:600;
+    color:var(--key-text);
+    background:var(--key-num);
+    cursor:pointer;
+    box-shadow:
+      0 3px 0 rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    transition:transform 0.06s ease, box-shadow 0.06s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  button:active{
+    transform:translateY(2px);
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .key-fn{ background:var(--key-fn); }
+  .key-op{ background:var(--key-op); }
+  .key-eq{ background:var(--key-eq); grid-row:span 2; height:100%; }
+  .key-zero{ grid-column:span 2; }
+
+  .foot-note{
+    text-align:center;
+    color:#6c6c6f;
+    font-size:0.7rem;
+    margin-top:16px;
+    letter-spacing:0.02em;
+  }
+</style>
+</head>
+<body>
+
+<div class="unit">
+  <div class="brand-row">
+    <span>DESKMATE</span>
+    <span class="model">DM-100</span>
+  </div>
+
+  <div class="screen-panel">
+    <div class="lcd">
+      <div class="lcd-expression" id="expression">&nbsp;</div>
+      <div class="lcd-result" id="result">0</div>
+    </div>
+  </div>
+
+  <div class="keys">
+    <button class="key-fn" data-action="clear">AC</button>
+    <button class="key-fn" data-action="negate">+/-</button>
+    <button class="key-fn" data-action="percent">%</button>
+    <button class="key-op" data-action="operator" data-value="÷">÷</button>
+
+    <button class="key-num" data-action="digit" data-value="7">7</button>
+    <button class="key-num" data-action="digit" data-value="8">8</button>
+    <button class="key-num" data-action="digit" data-value="9">9</button>
+    <button class="key-op" data-action="operator" data-value="×">×</button>
+
+    <button class="key-num" data-action="digit" data-value="4">4</button>
+    <button class="key-num" data-action="digit" data-value="5">5</button>
+    <button class="key-num" data-action="digit" data-value="6">6</button>
+    <button class="key-op" data-action="operator" data-value="−">−</button>
+
+    <button class="key-num" data-action="digit" data-value="1">1</button>
+    <button class="key-num" data-action="digit" data-value="2">2</button>
+    <button class="key-num" data-action="digit" data-value="3">3</button>
+    <button class="key-op" data-action="operator" data-value="+">+</button>
+
+    <button class="key-num key-zero" data-action="digit" data-value="0">0</button>
+    <button class="key-num" data-action="decimal">.</button>
+    <button class="key-eq" data-action="equals">=</button>
+  </div>
+
+  <p class="foot-note">TAP OR USE YOUR KEYBOARD</p>
+</div>
+
+<script>
+(function(){
+  const exprEl   = document.getElementById('expression');
+  const resultEl = document.getElementById('result');
+
+  let current   = "0";     // number currently being typed / shown
+  let previous  = null;    // stored left-hand operand
+  let operator  = null;    // pending operator symbol
+  let justEvaluated = false;
+
+  const OP_MAP = { "+": (a,b)=>a+b, "−": (a,b)=>a-b, "×": (a,b)=>a*b, "÷": (a,b)=> b===0 ? NaN : a/b };
+
+  function formatNumber(n){
+    if (Number.isNaN(n)) return "Error";
+    if (!Number.isFinite(n)) return "Error";
+    let s = parseFloat(n.toPrecision(12)).toString();
+    if (s.length > 14) s = Number(n).toExponential(6);
+    return s;
+  }
+
+  function render(){
+    resultEl.textContent = current;
+    if (operator && previous !== null){
+      exprEl.textContent = `${formatNumber(previous)} ${operator}`;
+    } else {
+      exprEl.textContent = "\u00A0";
+    }
+  }
+
+  function inputDigit(d){
+    if (justEvaluated){
+      current = "0";
+      justEvaluated = false;
+    }
+    if (current === "0" && d !== "."){
+      current = d;
+    } else if (d === "." && current.includes(".")){
+      return;
+    } else {
+      if (current.length >= 14) return;
+      current += d;
+    }
+    render();
+  }
+
+  function inputDecimal(){
+    if (justEvaluated){
+      current = "0";
+      justEvaluated = false;
+    }
+    if (!current.includes(".")) current += ".";
+    render();
+  }
+
+  function setOperator(op){
+    if (operator !== null && previous !== null && !justEvaluated){
+      evaluate(false);
+    }
+    previous = parseFloat(current);
+    operator = op;
+    justEvaluated = false;
+    current = "0";
+    render();
+  }
+
+  function evaluate(resetOperator = true){
+    if (operator === null || previous === null) return;
+    const a = previous;
+    const b = parseFloat(current);
+    const fn = OP_MAP[operator];
+    const out = fn(a, b);
+    current = formatNumber(out);
+    if (resetOperator){
+      operator = null;
+      previous = null;
+      justEvaluated = true;
+    } else {
+      previous = out;
+    }
+    render();
+  }
+
+  function clearAll(){
+    current = "0";
+    previous = null;
+    operator = null;
+    justEvaluated = false;
+    render();
+  }
+
+  function negate(){
+    if (current === "0") return;
+    current = current.startsWith("-") ? current.slice(1) : "-" + current;
+    render();
+  }
+
+  function percent(){
+    const n = parseFloat(current);
+    current = formatNumber(n / 100);
+    render();
+  }
+
+  document.querySelector('.keys').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const value  = btn.dataset.value;
+
+    if (action === 'digit')     inputDigit(value);
+    if (action === 'decimal')   inputDecimal();
+    if (action === 'operator')  setOperator(value);
+    if (action === 'equals')    evaluate(true);
+    if (action === 'clear')     clearAll();
+    if (action === 'negate')    negate();
+    if (action === 'percent')   percent();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '9') inputDigit(e.key);
+    else if (e.key === '.') inputDecimal();
+    else if (e.key === '+') setOperator('+');
+    else if (e.key === '-') setOperator('−');
+    else if (e.key === '*') setOperator('×');
+    else if (e.key === '/') { e.preventDefault(); setOperator('÷'); }
+    else if (e.key === 'Enter' || e.key === '=') evaluate(true);
+    else if (e.key === 'Escape') clearAll();
+    else if (e.key === 'Backspace'){
+      current = current.length > 1 ? current.slice(0, -1) : "0";
+      render();
+    }
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
