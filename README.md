@@ -1,2 +1,2 @@
-# static-and-grain-record-shop
-A vintage-inspired record shop landing page
+# CodSoft Tasks
+Web development tasks completed during my CodSoft internship.
