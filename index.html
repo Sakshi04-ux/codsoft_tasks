@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static &amp; Grain — Record Shop</title>
+<style>
+  :root{
+    --ink:        #17130f;
+    --paper:      #efe6d6;
+    --paper-dim:  #d8cdb8;
+    --yellow:     #e7b224;
+    --brick:      #a63a2c;
+    --line:       rgba(239,230,214,0.14);
+    --radius:     3px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+
+  .display{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-weight:800;
+    letter-spacing:-0.02em;
+  }
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  :focus-visible{
+    outline:2px solid var(--yellow);
+    outline-offset:3px;
+  }
+
+  /* ---------- header ---------- */
+
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(23,19,15,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 0;
+  }
+
+  .wordmark{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-weight:800;
+    font-size:1.15rem;
+    letter-spacing:-0.01em;
+  }
+  .wordmark span{ color:var(--yellow); }
+
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:28px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.92rem;
+  }
+  nav a{
+    position:relative;
+    padding-bottom:3px;
+    opacity:0.85;
+    transition:opacity 0.15s ease;
+  }
+  nav a:hover{ opacity:1; }
+  nav a::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-2px;
+    height:1px;
+    background:var(--yellow);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform 0.2s ease;
+  }
+  nav a:hover::after{ transform:scaleX(1); }
+
+  .nav-toggle{ display:none; }
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    padding:96px 0 88px;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:center;
+  }
+
+  .hero-eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.85rem;
+    color:var(--paper-dim);
+    margin-bottom:18px;
+  }
+
+  .hero h1{
+    font-size:clamp(2.6rem, 5vw, 4.1rem);
+    line-height:1.04;
+    max-width:11ch;
+  }
+
+  .hero p{
+    margin-top:24px;
+    max-width:38ch;
+    color:var(--paper-dim);
+    font-size:1.08rem;
+  }
+
+  .hero-actions{
+    margin-top:36px;
+    display:flex;
+    gap:16px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    padding:14px 26px;
+    border-radius:var(--radius);
+    display:inline-block;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .btn-primary{
+    background:var(--yellow);
+    color:var(--ink);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{
+    border-color:var(--line);
+    color:var(--paper);
+  }
+  .btn-ghost:hover{ border-color:var(--paper-dim); }
+
+  /* spinning record */
+
+  .record-stage{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .record{
+    width:min(360px, 80vw);
+    aspect-ratio:1;
+    border-radius:50%;
+    position:relative;
+    animation:spin 14s linear infinite;
+    background:
+      repeating-radial-gradient(circle at center,
+        #0e0b09 0px, #0e0b09 2px,
+        #1c1712 2px, #1c1712 4px);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .record::before{
+    content:"";
+    position:absolute;
+    inset:38%;
+    border-radius:50%;
+    background:var(--brick);
+    border:1px solid rgba(0,0,0,0.3);
+  }
+  .record::after{
+    content:"";
+    position:absolute;
+    inset:47.5%;
+    border-radius:50%;
+    background:var(--ink);
+    border:3px solid var(--paper-dim);
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .record-tag{
+    position:absolute;
+    bottom:-14px;
+    right:calc(50% - 150px);
+    background:var(--ink);
+    border:1px solid var(--line);
+    padding:8px 14px;
+    border-radius:var(--radius);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.78rem;
+    color:var(--paper-dim);
+  }
+
+  /* ---------- section shell ---------- */
+
+  section{ padding:76px 0; border-top:1px solid var(--line); }
+
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:44px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:clamp(1.7rem, 3vw, 2.3rem);
+    max-width:16ch;
+  }
+  .section-head p{
+    color:var(--paper-dim);
+    max-width:34ch;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.95rem;
+  }
+
+  /* ---------- crates (genre grid) ---------- */
+
+  .crates{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:2px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+
+  .crate{
+    background:var(--ink);
+    padding:34px 28px;
+    min-height:168px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    transition:background 0.2s ease;
+  }
+  .crate:hover{ background:#1d1712; }
+
+  .crate .count{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.78rem;
+    color:var(--paper-dim);
+  }
+  .crate h3{
+    font-size:1.4rem;
+    margin-top:26px;
+  }
+  .crate:nth-child(3n+2) h3{ color:var(--yellow); }
+  .crate:nth-child(3n+3) h3{ color:var(--brick); }
+
+  /* ---------- featured / now spinning ---------- */
+
+  .feature{
+    display:grid;
+    grid-template-columns:0.8fr 1.2fr;
+    gap:52px;
+    align-items:center;
+  }
+
+  .feature-art{
+    aspect-ratio:1;
+    border-radius:var(--radius);
+    background:
+      linear-gradient(135deg, #b5482f, #7c2a1f 55%, #3c150f);
+    position:relative;
+    overflow:hidden;
+  }
+  .feature-art::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(
+      115deg,
+      rgba(239,230,214,0.05) 0px,
+      rgba(239,230,214,0.05) 2px,
+      transparent 2px,
+      transparent 14px
+    );
+  }
+
+  .feature-body .kicker{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    color:var(--yellow);
+    font-size:0.85rem;
+    margin-bottom:14px;
+  }
+  .feature-body h2{ font-size:2rem; max-width:14ch; }
+  .feature-body p{
+    margin-top:18px;
+    color:var(--paper-dim);
+    max-width:46ch;
+  }
+
+  .feature-meta{
+    margin-top:28px;
+    display:flex;
+    gap:32px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+  .feature-meta div{ font-size:0.8rem; color:var(--paper-dim); }
+  .feature-meta strong{
+    display:block;
+    color:var(--paper);
+    font-size:1rem;
+    margin-top:4px;
+  }
+
+  /* ---------- sessions (Side A / Side B — genuinely two sides) ---------- */
+
+  .sides{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .side{
+    background:var(--ink);
+    padding:40px;
+  }
+  .side .side-label{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.8rem;
+    color:var(--paper-dim);
+    margin-bottom:10px;
+  }
+  .side h3{ font-size:1.6rem; margin-bottom:20px; }
+
+  .slot{
+    display:flex;
+    justify-content:space-between;
+    padding:14px 0;
+    border-top:1px solid var(--line);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.92rem;
+  }
+  .slot:first-of-type{ border-top:none; }
+  .slot span:last-child{ color:var(--paper-dim); }
+
+  /* ---------- visit / map ---------- */
+
+  .visit{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+  }
+  .visit-details p{ color:var(--paper-dim); margin-bottom:22px; max-width:40ch; }
+  .visit-row{
+    display:flex;
+    gap:18px;
+    padding:16px 0;
+    border-top:1px solid var(--line);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+  .visit-row:first-of-type{ border-top:none; }
+  .visit-row .label{ width:100px; color:var(--paper-dim); font-size:0.85rem; flex-shrink:0; }
+
+  .map-plate{
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    background:
+      linear-gradient(#1a1510,#1a1510) padding-box,
+      repeating-linear-gradient(0deg, transparent, transparent 27px, var(--line) 27px, var(--line) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, var(--line) 27px, var(--line) 28px);
+    min-height:280px;
+    position:relative;
+  }
+  .map-plate::after{
+    content:"◎";
+    position:absolute;
+    top:44%; left:58%;
+    color:var(--brick);
+    font-size:1.6rem;
+  }
+
+  /* ---------- footer ---------- */
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:48px 0 40px;
+  }
+  .foot-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:0.85rem;
+    color:var(--paper-dim);
+  }
+  .foot-links{ display:flex; gap:22px; }
+  .foot-links a:hover{ color:var(--paper); }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width:860px){
+    .hero{ grid-template-columns:1fr; padding-top:64px; }
+    .record-stage{ order:-1; }
+    .record-tag{ right:auto; left:calc(50% - 150px); }
+    .crates{ grid-template-columns:1fr 1fr; }
+    .feature{ grid-template-columns:1fr; }
+    .sides{ grid-template-columns:1fr; }
+    .visit{ grid-template-columns:1fr; }
+    nav ul{ display:none; }
+  }
+  @media (max-width:520px){
+    .crates{ grid-template-columns:1fr; }
+    .wrap{ padding:0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a href="#top" class="wordmark">STATIC <span>&amp;</span> GRAIN</a>
+    <nav>
+      <ul>
+        <li><a href="#crates">Crates</a></li>
+        <li><a href="#featured">Featured</a></li>
+        <li><a href="#sessions">Listening sessions</a></li>
+        <li><a href="#visit">Visit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero" style="border-top:none;">
+    <div class="wrap" style="display:contents;">
+      <div>
+        <p class="hero-eyebrow display">SECOND-HAND &amp; NEW PRESSINGS · EST. 2014</p>
+        <h1 class="display">New arrivals spin every Friday.</h1>
+        <p>A crate-dug, hand-graded selection of jazz, soul, post-punk and dance records — plus a turntable bar where you can hear a pressing before you buy it.</p>
+        <div class="hero-actions">
+          <a href="#crates" class="btn btn-primary">Browse the crates</a>
+          <a href="#sessions" class="btn btn-ghost">See this week's sessions</a>
+        </div>
+      </div>
+      <div class="record-stage">
+        <div class="record"></div>
+        <div class="record-tag">side A, track 1 — now playing</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="crates">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Six crates, no filler.</h2>
+        <p>We keep the floor small on purpose — every record on the shelf was pulled and graded by hand.</p>
+      </div>
+      <div class="crates">
+        <div class="crate">
+          <span class="count display">340+ LPs</span>
+          <h3 class="display">Jazz &amp; Fusion</h3>
+        </div>
+        <div class="crate">
+          <span class="count display">210+ LPs</span>
+          <h3 class="display">Soul &amp; Funk</h3>
+        </div>
+        <div class="crate">
+          <span class="count display">180+ LPs</span>
+          <h3 class="display">Post-Punk</h3>
+        </div>
+        <div class="crate">
+          <span class="count display">150+ LPs</span>
+          <h3 class="display">Ambient</h3>
+        </div>
+        <div class="crate">
+          <span class="count display">260+ LPs</span>
+          <h3 class="display">Hip-Hop</h3>
+        </div>
+        <div class="crate">
+          <span class="count display">120+ LPs</span>
+          <h3 class="display">Dance &amp; Disco</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="featured">
+    <div class="wrap feature">
+      <div class="feature-art"></div>
+      <div class="feature-body">
+        <p class="kicker display">ON THE TURNTABLE THIS WEEK</p>
+        <h2 class="display">A first pressing worth the drive in.</h2>
+        <p>Graded VG+, original sleeve, one small seam split on the spine. We'll play the whole thing at the counter if you want to hear it before it leaves the shop.</p>
+        <div class="feature-meta">
+          <div>Condition<strong>VG+ / NM sleeve</strong></div>
+          <div>Pressing<strong>Original, 1974</strong></div>
+          <div>Price<strong>$48</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sessions">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>In-store listening sessions.</h2>
+        <p>Two sides to every Saturday — come for one, stay for both.</p>
+      </div>
+      <div class="sides">
+        <div class="side">
+          <p class="side-label display">SIDE A — MORNING</p>
+          <h3 class="display">Slow records, coffee on.</h3>
+          <div class="slot"><span>10:00</span><span>Ambient &amp; drone selections</span></div>
+          <div class="slot"><span>11:00</span><span>Staff picks, jazz</span></div>
+          <div class="slot"><span>12:00</span><span>Open crate — bring a record</span></div>
+        </div>
+        <div class="side">
+          <p class="side-label display">SIDE B — EVENING</p>
+          <h3 class="display">Louder, later, dancefloor.</h3>
+          <div class="slot"><span>18:00</span><span>Funk &amp; disco warm-up</span></div>
+          <div class="slot"><span>19:30</span><span>Guest DJ set</span></div>
+          <div class="slot"><span>21:00</span><span>Closing selections</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap visit">
+      <div class="visit-details">
+        <h2 class="display" style="font-size:2rem; margin-bottom:16px;">Come dig through the crates.</h2>
+        <p>No appointment needed — walk in, put on headphones, take your time. We'll be behind the counter if you need a second opinion on a pressing.</p>
+        <div class="visit-row"><span class="label">Address</span><span>214 Kessler Lane, Unit 3</span></div>
+        <div class="visit-row"><span class="label">Hours</span><span>Tue–Sat, 11:00–19:00</span></div>
+        <div class="visit-row"><span class="label">Phone</span><span>(555) 019-2247</span></div>
+      </div>
+      <div class="map-plate" role="img" aria-label="Map showing the shop location"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>&copy; 2026 Static &amp; Grain Records</span>
+    <div class="foot-links">
+      <a href="#crates">Crates</a>
+      <a href="#sessions">Sessions</a>
+      <a href="#visit">Visit</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
