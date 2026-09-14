@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sakshi Verma — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg: #FBF9F5;
+    --bg-alt: #F1EEE6;
+    --ink: #20261F;
+    --ink-soft: #4B5348;
+    --sage: #5F7A52;
+    --sage-deep: #47603C;
+    --mauve: #A9738F;
+    --line: #DDD6C8;
+    --radius-organic: 62% 38% 55% 45% / 45% 55% 45% 55%;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  h1, h2, h3{
+    font-family: 'Fraunces', serif;
+    color: var(--ink);
+    margin: 0;
+    font-weight: 600;
+  }
+
+  a{ color: inherit; }
+
+  img{ max-width: 100%; display: block; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section{
+    padding: 96px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  section:last-of-type{ border-bottom: none; }
+
+  .label{
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--sage-deep);
+    font-weight: 500;
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+
+ 
+
+  header{
+    position: sticky;
+    top: 0;
+    background: rgba(251,249,245,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    z-index: 50;
+  }
+
+  nav.wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .logo{
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .navlinks{
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navlinks a{
+    text-decoration: none;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    padding: 4px 2px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .navlinks a:hover, .navlinks a:focus-visible{
+    color: var(--ink);
+    border-color: var(--mauve);
+  }
+
+  .navtoggle{
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+  }
+
+  .navtoggle span{
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--ink);
+    margin: 5px 0;
+  }
+
+ 
+
+  .hero{
+    padding-top: 88px;
+    padding-bottom: 88px;
+  }
+
+  .hero-eyebrow{
+    color: var(--mauve);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  .hero h1{
+    font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+    line-height: 1.05;
+    max-width: 15ch;
+    letter-spacing: -0.01em;
+  }
+
+  .hero h1 em{
+    font-style: italic;
+    color: var(--sage-deep);
+  }
+
+  .hero p{
+    max-width: 52ch;
+    margin-top: 26px;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+
+  .hero-actions{
+    margin-top: 38px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn{
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.98rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .btn:hover{ transform: translateY(-2px); }
+
+  .btn-solid{
+    background: var(--sage-deep);
+    color: #FBF9F5;
+  }
+  .btn-solid:hover{ background: var(--ink); }
+
+  .btn-outline{
+    background: transparent;
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .btn-outline:hover{ border-color: var(--mauve); color: var(--mauve); }
+
+
+  .about-grid{
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .about-photo-wrap{
+    position: relative;
+  }
+
+  .about-photo{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-organic);
+    border: 1px solid var(--line);
+  }
+
+  .about-photo-ring{
+    position: absolute;
+    inset: -14px;
+    border: 1.5px solid var(--mauve);
+    border-radius: var(--radius-organic);
+    z-index: -1;
+  }
+
+  .about-copy h2{
+    font-size: 2rem;
+    margin-bottom: 22px;
+  }
+
+  .about-copy p{
+    color: var(--ink-soft);
+    margin: 0 0 16px 0;
+    max-width: 62ch;
+  }
+
+  .about-copy p:last-child{ margin-bottom: 0; }
+
+
+
+  .skills-groups{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 12px;
+  }
+
+  .skills-groups h3{
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .chip-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip{
+    font-size: 0.9rem;
+    padding: 7px 14px;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-soft);
+  }
+
+ 
+  .projects-heading{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .projects-heading h2{ font-size: 2rem; }
+
+  .projects-heading p{
+    color: var(--ink-soft);
+    max-width: 40ch;
+    margin: 0;
+  }
+
+  .project-list{
+    display: grid;
+    gap: 28px;
+  }
+
+  .project-card{
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
+    padding: 28px;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    align-items: center;
+  }
+
+  .project-thumb{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .project-thumb svg{ width: 100%; height: 100%; display: block; }
+
+  .project-tag{
+    font-size: 0.82rem;
+    color: var(--sage-deep);
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .project-card h3{
+    font-size: 1.35rem;
+    margin-bottom: 10px;
+  }
+
+  .project-card p{
+    color: var(--ink-soft);
+    margin: 0 0 14px 0;
+    max-width: 58ch;
+  }
+
+  .project-link{
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--sage-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+
+
+  .resume-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    padding: 40px;
+    background: var(--sage-deep);
+    color: #FBF9F5;
+    border-radius: 10px;
+    flex-wrap: wrap;
+  }
+
+  .resume-box h2{
+    color: #FBF9F5;
+    font-size: 1.8rem;
+  }
+
+  .resume-box p{
+    color: #DDE4D8;
+    margin: 10px 0 0 0;
+    max-width: 46ch;
+  }
+
+  .resume-box .btn-solid{
+    background: #FBF9F5;
+    color: var(--sage-deep);
+  }
+  .resume-box .btn-solid:hover{
+    background: var(--mauve);
+    color: #FBF9F5;
+  }
+
+  
+
+  .contact-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .contact-card{
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-alt);
+  }
+
+  .contact-card .label{ margin-bottom: 8px; }
+
+  .contact-card a, .contact-card span{
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+
+  .contact-card a{ text-decoration: none; }
+  .contact-card a:hover{ color: var(--mauve); }
+
+  
+  footer{
+    padding: 32px 0;
+  }
+
+  .footer-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-row p{
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  .footer-links{
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-links a{
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .footer-links a:hover{ color: var(--mauve); }
+
+
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--mauve);
+    outline-offset: 3px;
+  }
+
+  
+
+  @media (max-width: 860px){
+    .about-grid{ grid-template-columns: 1fr; }
+    .about-photo-wrap{ max-width: 240px; }
+    .skills-groups{ grid-template-columns: 1fr 1fr; }
+    .project-card{ grid-template-columns: 1fr; }
+    .contact-grid{ grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 620px){
+    section{ padding: 64px 0; }
+    .wrap{ padding: 0 20px; }
+    .navlinks{
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      flex-direction: column;
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+      display: none;
+    }
+    .navlinks.open{ display: flex; }
+    .navlinks a{
+      padding: 14px 32px;
+      width: 100%;
+      border-bottom: 1px solid var(--line);
+    }
+    .navtoggle{ display: block; }
+    .skills-groups{ grid-template-columns: 1fr; }
+    .resume-box{ flex-direction: column; align-items: flex-start; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="logo" href="#top">Sakshi Verma</a>
+    <button class="navtoggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navlinks" id="navLinks">
+      <li><a href="#top">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero" id="top">
+    <div class="wrap">
+      <p class="hero-eyebrow">Hi, I'm Sakshi</p>
+      <h1>I build clean, useful things <em>for the web.</em></h1>
+      <p>A Computer Science student who enjoys turning ideas into responsive, accessible interfaces — currently sharpening my front-end skills and looking for my first opportunity in web development.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#projects">See my work</a>
+        <a class="btn btn-outline" href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="about-photo-wrap">
+        <div class="about-photo-ring"></div>
+        <img class="about-photo" src="profile.jpeg" alt="Portrait of Sakshi Verma">
+      </div>
+      <div class="about-copy">
+        <span class="label">About me</span>
+        <h2>Curious, detail-oriented, and always learning something new.</h2>
+        <p>I'm a Computer Science student with a growing focus on front-end development. I like the part of building software where a design turns into something people can actually click, scroll, and use — and I pay close attention to the small details that make an interface feel right.</p>
+        <p>Alongside coursework, I've been teaching myself HTML, CSS, and JavaScript through personal projects, and I'm comfortable picking up new tools quickly. I'm looking for opportunities where I can keep building real things and learn from people further along the path than me.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <span class="label">Skills</span>
+      <h2 style="font-size:2rem; margin-bottom: 36px;">What I work with</h2>
+      <div class="skills-groups">
+        <div>
+          <h3>Languages</h3>
+          <div class="chip-row">
+            <span class="chip">HTML</span>
+            <span class="chip">CSS</span>
+            <span class="chip">JavaScript</span>
+            <span class="chip">Python</span>
+            <span class="chip">C++</span>
+          </div>
+        </div>
+        <div>
+          <h3>Tools &amp; Frameworks</h3>
+          <div class="chip-row">
+            <span class="chip">Git &amp; GitHub</span>
+            <span class="chip">VS Code</span>
+            <span class="chip">Bootstrap</span>
+            <span class="chip">Figma</span>
+            <span class="chip">MySQL</span>
+          </div>
+        </div>
+        <div>
+          <h3>Also learning</h3>
+          <div class="chip-row">
+            <span class="chip">React</span>
+            <span class="chip">Responsive Design</span>
+            <span class="chip">Accessibility</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="projects-heading">
+        <div>
+          <span class="label">Projects</span>
+          <h2>A few things I've built</h2>
+        </div>
+        <p>Small, self-directed projects from coursework and practice — each one taught me something I didn't know going in.</p>
+      </div>
+
+      <div class="project-list">
+
+        <div class="project-card">
+          <div class="project-thumb">
+            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#F1EEE6"/>
+              <rect x="0" y="0" width="400" height="46" fill="#5F7A52"/>
+              <circle cx="24" cy="23" r="6" fill="#FBF9F5"/>
+              <circle cx="46" cy="23" r="6" fill="#FBF9F5" opacity="0.6"/>
+              <rect x="40" y="80" width="150" height="14" rx="3" fill="#20261F" opacity="0.75"/>
+              <rect x="40" y="106" width="220" height="10" rx="3" fill="#4B5348" opacity="0.5"/>
+              <rect x="40" y="126" width="220" height="10" rx="3" fill="#4B5348" opacity="0.5"/>
+              <rect x="40" y="160" width="100" height="34" rx="6" fill="#A9738F"/>
+            </svg>
+          </div>
+          <div>
+            <span class="project-tag">Front-end · HTML / CSS</span>
+            <h3>Recipe Finder Landing Page</h3>
+            <p>A responsive landing page for a recipe search concept, built to practice CSS grid, flexbox, and mobile-first layout without any framework.</p>
+            <a class="project-link" href="#">View project</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-thumb">
+            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#F1EEE6"/>
+              <rect x="30" y="30" width="160" height="110" rx="8" fill="#A9738F" opacity="0.85"/>
+              <rect x="210" y="30" width="160" height="50" rx="8" fill="#5F7A52" opacity="0.85"/>
+              <rect x="210" y="90" width="160" height="50" rx="8" fill="#20261F" opacity="0.15"/>
+              <rect x="30" y="160" width="340" height="12" rx="3" fill="#4B5348" opacity="0.4"/>
+              <rect x="30" y="182" width="260" height="12" rx="3" fill="#4B5348" opacity="0.4"/>
+            </svg>
+          </div>
+          <div>
+            <span class="project-tag">JavaScript · DOM</span>
+            <h3>To-Do List with Local Storage</h3>
+            <p>A task manager that saves your list in the browser between visits, with add, edit, complete, and delete — my first project using JavaScript beyond a tutorial.</p>
+            <a class="project-link" href="#">View project</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-thumb">
+            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#F1EEE6"/>
+              <circle cx="200" cy="150" r="90" fill="none" stroke="#5F7A52" stroke-width="10"/>
+              <circle cx="200" cy="150" r="90" fill="none" stroke="#A9738F" stroke-width="10" stroke-dasharray="180 400" stroke-linecap="round"/>
+              <rect x="150" y="130" width="100" height="14" rx="4" fill="#20261F" opacity="0.7"/>
+              <rect x="165" y="152" width="70" height="10" rx="3" fill="#4B5348" opacity="0.5"/>
+            </svg>
+          </div>
+          <div>
+            <span class="project-tag">Data · Python</span>
+            <h3>Student Attendance Tracker</h3>
+            <p>A small Python + MySQL tool built for a college assignment to log attendance and generate simple percentage reports for a class.</p>
+            <a class="project-link" href="#">View project</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="resume">
+    <div class="wrap">
+      <div class="resume-box">
+        <div>
+          <h2>Want the full picture?</h2>
+          <p>Download my résumé for details on my education, coursework, and project experience.</p>
+        </div>
+        <a class="btn btn-solid" href="resume.pdf" download>Download résumé (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <span class="label">Contact</span>
+      <h2 style="font-size:2rem; margin-bottom: 32px;">Let's talk</h2>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <span class="label">Email</span><br>
+          <a href="mailto:sakshi.verma@example.com">sakshi.verma@example.com</a>
+        </div>
+        <div class="contact-card">
+          <span class="label">Phone</span><br>
+          <span>+91 98765 43210</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <p>© 2026 Sakshi Verma. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#top">Back to top</a></li>
+      <li><a href="mailto:sakshi.verma@example.com">Email</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
+
+</body>
+            </html>
